@@ -11,15 +11,14 @@ SECRET_KEY = decouple.config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["1309-151-251-246-235.eu.ngrok.io", '127.0.0.1', 'localhost']
-CSRF_TRUSTED_ORIGINS = ['https://1309-151-251-246-235.eu.ngrok.io', 'http://127.0.0.1:8000']
+ALLOWED_HOSTS = ["de8e-151-251-246-235.eu.ngrok.io", '127.0.0.1', 'localhost']
+CSRF_TRUSTED_ORIGINS = ['https://de8e-151-251-246-235.eu.ngrok.io', 'http://127.0.0.1:8000']
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://localhost:3000',
-    'https://1309-151-251-246-235.eu.ngrok.io'
+    'https://de8e-151-251-246-235.eu.ngrok.io'
 )
-
 
 CORS_ALLOW_HEADERS = (
     'content-disposition', 'accept-encoding',
@@ -62,7 +61,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-ROOT_URLCONF = 'server.urls'
+ROOT_URLCONF = 'SmartFriend.urls'
 
 TEMPLATES = [
     {
@@ -81,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'server.wsgi.application'
+WSGI_APPLICATION = 'SmartFriend.wsgi.application'
 
 DATABASES = {
     'default': {
