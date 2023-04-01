@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth import models as auth_models
 from django.contrib.postgres.fields import ArrayField
 
-from SmartFriend.helpers import OPENING_TEXT
 from auth_app.managers import CustomUserManager
 
 
@@ -51,9 +50,7 @@ class Profile(models.Model):
 
     current_conversation_messages = ArrayField(
         models.TextField(),
-        default=[
-            OPENING_TEXT
-        ],
+        default=list,
         blank=True,
     )
 

@@ -3,8 +3,9 @@ from rest_framework import generics, status, views, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
+from auth_app.models import Profile
 from auth_app.serializers import UserSerializer
-
+from open_ai.tasks import get_summary
 
 UserModel = get_user_model()
 
@@ -47,6 +48,7 @@ class LoginUserView(views.APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         check_user = UserModel.objects.filter(username=username)
+
         if not check_user:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -55,6 +57,19 @@ class LoginUserView(views.APIView):
         if user:
             login(request, user)
             token, created = Token.objects.get_or_create(user=request.user)
+
+            profile = Profile.objects.get(user_id=user.id)
+
+            # summary = ""
+            #
+            # if profile.current_conversation_messages:
+            #     summary = get_summary(profile.current_conversation_messages)
+
+            profile.current_conversation_messages.clear()
+            # profile.current_conversation_messages.append(summary)
+            # profile.summary_conversation = summary
+
+            profile.save()
 
             data = {
                 'token': token.key,
