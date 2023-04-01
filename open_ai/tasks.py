@@ -1,12 +1,37 @@
 import openai as openai
 
+from SmartFriend.helpers import MAKE_SUMMARY, OPENING_TEXT, BONUS_CONDITION
 
-def get_response_from_text(text):
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=text,
-        temperature=0.5,
+
+def get_response(conversation):
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=conversation,
     )
 
-    return response.choices[0].text
+    print(response.choices[0].message.content)
 
+    return response.choices[0].message.content
+
+
+def start_conversation(summary):
+    conversation = [
+        {
+            'role': 'system',
+            'content': BONUS_CONDITION + " " + summary + " " + OPENING_TEXT ,
+        }
+    ]
+
+    return conversation
+
+
+def post_summary(conversation):
+    if conversation:
+        result = {
+            'role': 'system',
+            'content': MAKE_SUMMARY
+        }
+
+        return result
+
+    return ""
