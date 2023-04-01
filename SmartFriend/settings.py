@@ -4,6 +4,7 @@ import decouple
 from pathlib import Path
 
 import decouple
+import openai
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -118,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-OPENAIAPI=os.getenv('OPENAIAPI', decouple.config('OPENAIAPI'))
+openai.api_key = os.getenv('OPENAIAPI', decouple.config('OPENAIAPI'))
 
 LANGUAGE_CODE = 'en-us'
 
