@@ -4,6 +4,7 @@ import decouple
 from pathlib import Path
 
 import decouple
+import openai
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -11,13 +12,19 @@ SECRET_KEY = decouple.config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["de8e-151-251-246-235.eu.ngrok.io", '127.0.0.1', 'localhost']
-CSRF_TRUSTED_ORIGINS = ['https://de8e-151-251-246-235.eu.ngrok.io', 'http://127.0.0.1:8000']
+ALLOWED_HOSTS = [
+    os.getenv('HOST', decouple.config('HOST')),
+    '127.0.0.1', 'localhost'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://' + os.getenv('HOST', decouple.config('HOST')), 'http://127.0.0.1:8000'
+]
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://localhost:3000',
-    'https://de8e-151-251-246-235.eu.ngrok.io'
+    'https://' + os.getenv('HOST', decouple.config('HOST')),
 )
 
 CORS_ALLOW_HEADERS = (
@@ -27,6 +34,7 @@ CORS_ALLOW_HEADERS = (
 
 MY_APPS = [
     'auth_app',
+    'open_ai',
 ]
 
 INSTALLED_APPS = [
@@ -40,6 +48,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
 ] + MY_APPS
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -108,6 +118,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+openai.api_key = os.getenv('OPENAIAPI', decouple.config('OPENAIAPI'))
 
 LANGUAGE_CODE = 'en-us'
 

@@ -1,5 +1,5 @@
-from django.contrib.auth import get_user_model
-from rest_framework import generics, status
+from django.contrib.auth import get_user_model, authenticate, login
+from rest_framework import generics, status, views, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
@@ -9,7 +9,7 @@ from auth_app.serializers import UserSerializer
 UserModel = get_user_model()
 
 
-class UserCreate(generics.CreateAPIView):
+class UserCreateView(generics.CreateAPIView):
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
     permission_classes = []
@@ -33,3 +33,44 @@ class UserCreate(generics.CreateAPIView):
             status=status.HTTP_201_CREATED,
             headers=headers,
         )
+
+
+class LoginUserView(views.APIView):
+    queryset = UserModel.objects.all()
+    permission_classes = []
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        if not username or not password:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        check_user = UserModel.objects.filter(username=username)
+        if not check_user:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            login(request, user)
+            token, created = Token.objects.get_or_create(user=request.user)
+
+            data = {
+                'token': token.key,
+                'user_id': request.user.pk,
+                'username': request.user.username,
+            }
+
+            return Response(data, status=status.HTTP_201_CREATED)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutUserView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        request.user.auth_token.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
