@@ -98,11 +98,10 @@ DATABASES = {
         'NAME': os.getenv('DBNAME', decouple.config('DBNAME')),
         'USER': os.getenv('DBUSER', decouple.config('DBUSER')),
         'PASSWORD': os.getenv('DBPASS', decouple.config('DBPASS')),
-        'HOST': '127.0.0.1',
+        'HOST': os.getenv('DBHOST', decouple.config('DBHOST')),
         'PORT': '5432',
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {

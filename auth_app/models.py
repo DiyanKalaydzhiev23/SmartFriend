@@ -42,8 +42,7 @@ class Profile(models.Model):
         blank=True,
     )
 
-    summary_conversation = models.CharField(
-        max_length=250,
+    summary_conversation = models.TextField(
         default='',
         blank=True,
     )
