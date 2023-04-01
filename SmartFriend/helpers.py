@@ -1,6 +1,6 @@
 import json
 
-OPENING_TEXT = "Start a conversation with only one question about the person's day. " \
+OPENING_TEXT = "Start a conversation with only one question about a person's day, nothing more, nothing less." \
                "Pretend to be the person's best friend."
 
 BONUS_CONDITION = "On every new text from the user apply the following rules. " \
@@ -9,7 +9,7 @@ BONUS_CONDITION = "On every new text from the user apply the following rules. " 
                   "You can use data from the conversation but is not necessary."
 
 MAKE_SUMMARY = "Be concise, make summary on the most important data provided in the text in the brackets, " \
-               "like events personal data and so on with max 240 words\n"
+               "like events personal data and so on with max 200 words\n"
 
 
 def serialize_dump_json(data):
