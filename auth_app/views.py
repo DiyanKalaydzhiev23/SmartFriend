@@ -3,9 +3,10 @@ from rest_framework import generics, status, views, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
+from SmartFriend.helpers import serialize_load_json
 from auth_app.models import Profile
 from auth_app.serializers import UserSerializer
-from open_ai.tasks import get_summary
+from open_ai.tasks import post_summary, get_response
 
 UserModel = get_user_model()
 
@@ -60,14 +61,20 @@ class LoginUserView(views.APIView):
 
             profile = Profile.objects.get(user_id=user.id)
 
-            # summary = ""
-            #
-            # if profile.current_conversation_messages:
-            #     summary = get_summary(profile.current_conversation_messages)
+            profile.current_conversation_messages = serialize_load_json(
+                profile.current_conversation_messages
+            )
+
+            if profile.current_conversation_messages:
+                profile.current_conversation_messages.append(
+                    post_summary(profile.current_conversation_messages)
+                )
+
+                profile.summary_conversation = get_response(
+                    profile.current_conversation_messages
+                )
 
             profile.current_conversation_messages.clear()
-            # profile.current_conversation_messages.append(summary)
-            # profile.summary_conversation = summary
 
             profile.save()
 

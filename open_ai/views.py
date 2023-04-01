@@ -2,9 +2,9 @@ from rest_framework.response import Response
 from rest_framework import views, status
 from rest_framework.permissions import IsAuthenticated
 
-from SmartFriend.helpers import BONUS_CONDITION
+from SmartFriend.helpers import serialize_dump_json, serialize_load_json
 from auth_app.models import Profile
-from open_ai.tasks import get_response_from_text
+from open_ai.tasks import start_conversation, get_response
 
 
 class OpenAIResponseView(views.APIView):
@@ -13,23 +13,28 @@ class OpenAIResponseView(views.APIView):
     def post(self, request):
         profile = Profile.objects.get(user_id=request.user.id)
 
-        profile.current_conversation_messages.append({
-            'role': 'user',
-            'content': request.data.get('text'),
-        })
+        profile.current_conversation_messages = serialize_load_json(
+            profile.current_conversation_messages
+        )
 
-        # if text:
-        #     text += " " + BONUS_CONDITION
+        if not profile.current_conversation_messages:
+            profile.current_conversation_messages = start_conversation(
+                profile.summary_conversation
+            )
 
-        # text = text.replace("\n", "")
+        print("The req data", request.data.get("text"))
 
-        response = get_response_from_text(profile.current_conversation_messages)
+        if request.data.get("text"):
+            profile.current_conversation_messages.append({
+                'role': 'user',
+                'content': request.data.get('text'),
+            })
 
-        profile.current_conversation_messages.append({
-            'role': 'user',
-            'content': response,
-        })
+        response = get_response(profile.current_conversation_messages)
 
+        profile.current_conversation_messages = serialize_dump_json(
+            profile.current_conversation_messages
+        )
         profile.save()
 
         print("the conv is ", profile.current_conversation_messages)
