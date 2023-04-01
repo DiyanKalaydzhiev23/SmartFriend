@@ -27,11 +27,11 @@ def start_conversation(summary):
 
 def post_summary(conversation):
     if conversation:
-        conversation.append({
+        result = {
             'role': 'system',
             'content': MAKE_SUMMARY
-        })
+        }
 
-        return conversation
+        return result
 
     return ""
