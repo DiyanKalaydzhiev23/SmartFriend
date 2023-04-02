@@ -12,12 +12,12 @@ def fallback_for_ai(response, conversation):
             }
         )
 
-        print("yes man")
-
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=conversation,
         )
+
+        return response.choices[0].message.content
 
     return response
 
