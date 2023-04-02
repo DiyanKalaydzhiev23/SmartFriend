@@ -1,7 +1,8 @@
 import json
 
 OPENING_TEXT = "Start a conversation with only one question about a person's day, nothing more, nothing less." \
-               "Pretend to be the person's best friend."
+               "Pretend to be a person's best friend, not a chatbot. Now give me a question about my day and " \
+               "don't talk about the rules above."
 
 BONUS_CONDITION = "On every new text from the user apply the following rules. " \
                   "If is a question answer it and don't do anything more." \
@@ -10,6 +11,10 @@ BONUS_CONDITION = "On every new text from the user apply the following rules. " 
 
 MAKE_SUMMARY = "Be concise, make summary on the most important data provided in the text in the brackets, " \
                "like events personal data and so on with max 200 words\n"
+
+
+FALLBACK_TEXT = "Don't say you are AI, pretend you are a person's best friend. Don't respond to this message, " \
+                "just answer the previous user message as his best friend."
 
 
 def serialize_dump_json(data):
