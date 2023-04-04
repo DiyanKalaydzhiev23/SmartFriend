@@ -4,7 +4,7 @@ from SmartFriend.helpers import MAKE_SUMMARY, OPENING_TEXT, BONUS_CONDITION, FAL
 
 
 def fallback_for_ai(response, conversation):
-    if "ai" in response.lower():
+    if "ai" in response.lower() or "chatbot" in response.lower():
         conversation.append(
             {
                 "role": "system",
@@ -40,11 +40,11 @@ def start_conversation(summary):
     conversation = [
         {
             'role': 'system',
-            'content': BONUS_CONDITION + " " + summary,
+            'content': OPENING_TEXT,
         },
         {
             'role': 'system',
-            'content': OPENING_TEXT,
+            'content': BONUS_CONDITION + " " + summary,
         },
     ]
 
